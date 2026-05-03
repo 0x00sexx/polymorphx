@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolymorphX - Advanced EDR Evasion Toolkit</title>
+    <meta name="description" content="Professional FUD payload generation service. Proven evasion against Windows Defender. Polymorphic encoding, ChaCha20 encryption, NTDLL unhooking.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-green: #00ff88;
+            --neon-blue: #00d4ff;
+            --neon-purple: #7b2cbf;
+            --dark-bg: #0a0a0a;
+            --dark-bg2: #1a1a2e;
+            --dark-bg3: #16213e;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #666666;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background grid */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--neon-green) 1px, transparent 1px),
+                linear-gradient(90deg, var(--neon-green) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.03;
+            z-index: 0;
+            animation: gridScroll 20s linear infinite;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Glowing orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--neon-green);
+            top: 10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--neon-blue);
+            top: 50%;
+            right: -5%;
+            animation-delay: 7s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--neon-purple);
+            bottom: 10%;
+            left: 30%;
+            animation-delay: 14s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: var(--neon-green);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* Proof section */
+        .proof {
+            background: linear-gradient(135deg, var(--dark-bg2), var(--dark-bg3));
+            border: 1px solid var(--neon-green);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.1);
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .proof h2 {
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .proof-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .proof-item {
+            background: rgba(0, 255, 136, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--neon-green);
+        }
+
+        .proof-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .proof-value {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* Features section */
+        .section {
+            margin: 60px 0;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: var(--dark-bg2);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            color: var(--neon-blue);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* Pricing section */
+        .pricing {
+            margin: 60px 0;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .pricing-card {
+            background: var(--dark-bg2);
+            border: 2px solid var(--dark-bg3);
+            border-radius: 16px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .pricing-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .pricing-card:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.15);
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .pricing-badge {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .pricing-name {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            color: var(--neon-green);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .pricing-period {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .pricing-features li:before {
+            content: '▸ ';
+            color: var(--neon-green);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .pricing-target {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--dark-bg2), var(--dark-bg3));
+            border: 1px solid var(--neon-purple);
+            border-radius: 16px;
+            padding: 50px 30px;
+            text-align: center;
+            margin: 60px 0;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            color: var(--neon-purple);
+            margin-bottom: 20px;
+        }
+
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .contact-method {
+            background: rgba(123, 44, 191, 0.1);
+            border: 1px solid var(--neon-purple);
+            padding: 20px 30px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-method:hover {
+            background: rgba(123, 44, 191, 0.2);
+            box-shadow: 0 0 20px rgba(123, 44, 191, 0.3);
+        }
+
+        .contact-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .contact-value {
+            color: var(--neon-purple);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .legal {
+            background: rgba(255, 0, 0, 0.05);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            font-size: 0.75rem;
+            line-height: 1.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .pricing-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-methods {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Terminal effect */
+        .terminal {
+            background: #000;
+            border: 1px solid var(--neon-green);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Space Mono', monospace;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .terminal-line {
+            color: var(--neon-green);
+            margin: 5px 0;
+            font-size: 0.85rem;
+        }
+
+        .terminal-prompt {
+            color: var(--neon-blue);
+        }
+
+        .terminal-output {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1 class="logo">PolymorphX</h1>
+            <p class="tagline">Advanced EDR Evasion Toolkit</p>
+            <p class="subtitle">Military-grade polymorphic payload generation service for authorized penetration testing operations</p>
+        </header>
+
+        <!-- Proof of Concept -->
+        <section class="proof">
+            <h2>✓ Verified FUD Results - May 2026</h2>
+            
+            <!-- Video Proof -->
+            <div style="margin: 25px 0;">
+                <video controls style="width: 100%; max-width: 800px; border-radius: 8px; border: 2px solid var(--neon-green); display: block; margin: 0 auto; box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);">
+                    <source src="https://anonfilesnew.com/1lcqlqEuiNy/demo.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p style="text-align: center; margin-top: 15px; color: var(--text-secondary); font-size: 0.85rem;">
+                    📹 Live demonstration: Mimikatz execution with full Windows Defender protection enabled
+                </p>
+            </div>
+
+            <div class="proof-grid">
+                <div class="proof-item">
+                    <div class="proof-label">Target</div>
+                    <div class="proof-value">Windows Defender</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-label">Signatures</div>
+                    <div class="proof-value">1.449.425.0 (Latest)</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-label">Tamper Protection</div>
+                    <div class="proof-value">ENABLED ✓</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-label">Real-time Protection</div>
+                    <div class="proof-value">ACTIVE ✓</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-label">Test Payloads</div>
+                    <div class="proof-value">Mimikatz, Rubeus</div>
+                </div>
+                <div class="proof-item">
+                    <div class="proof-label">Detection Rate</div>
+                    <div class="proof-value">0 Detections</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="section">
+            <h2 class="section-title">Core Capabilities</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3 class="feature-title">Polymorphic Encoding</h3>
+                    <p class="feature-desc">Every payload gets a unique signature. Randomized encoding methods (XOR, ADD, SUB, ROT) ensure no two payloads are identical.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">ChaCha20 Encryption</h3>
+                    <p class="feature-desc">Military-grade encryption obfuscates your shellcode. Secure key derivation and randomized nonce generation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">NTDLL Unhooking</h3>
+                    <p class="feature-desc">Bypass EDR user-mode hooks by restoring clean NTDLL from disk. Full .text section or per-function unhooking.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Anti-Debugging</h3>
+                    <p class="feature-desc">Multiple evasion layers: parent process check, hardware breakpoint detection, timing-based analysis prevention.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">API Hashing</h3>
+                    <p class="feature-desc">PEB walking with MurmurHash3 for dynamic API resolution. No static imports to trigger detection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Low-Entropy Storage</h3>
+                    <p class="feature-desc">Encrypted shellcode stored as UUID, IPv4, or word-based formats. Defeats entropy-based scanners.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it works -->
+        <section class="section">
+            <h2 class="section-title">How It Works</h2>
+            <div class="terminal">
+                <div class="terminal-line"><span class="terminal-prompt">$</span> customer sends shellcode to icopxzio@proton.me</div>
+                <div class="terminal-line terminal-output">[INFO] Request received - Processing payload...</div>
+                <div class="terminal-line terminal-output">[INFO] Applying polymorphic encoding (ROT-13 + XOR)</div>
+                <div class="terminal-line terminal-output">[INFO] Encrypting with ChaCha20</div>
+                <div class="terminal-line terminal-output">[INFO] Implementing NTDLL unhooking</div>
+                <div class="terminal-line terminal-output">[INFO] Adding anti-debugging checks</div>
+                <div class="terminal-line terminal-output">[INFO] Compiling PE executable (x64)</div>
+                <div class="terminal-line terminal-output">[SUCCESS] FUD payload generated</div>
+                <div class="terminal-line"><span class="terminal-prompt">$</span> customer receives .exe within 24h (typically 2-4h)</div>
+                <div class="terminal-line terminal-output">[INFO] Detection rate: 0/68</div>
+                <div class="terminal-line terminal-output">[INFO] Ready for deployment</div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section class="pricing">
+            <h2 class="section-title">Pricing Plans</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 class="pricing-name">Pro</h3>
+                    <div class="pricing-price">€497</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>10 payload generations/month</li>
+                        <li>24-hour turnaround</li>
+                        <li>Email support</li>
+                        <li>Commercial license</li>
+                        <li>All core features</li>
+                    </ul>
+                    <div class="pricing-target">Perfect for individual pentesters</div>
+                </div>
+
+                <div class="pricing-card featured">
+                    <span class="pricing-badge">Most Popular</span>
+                    <h3 class="pricing-name">Team</h3>
+                    <div class="pricing-price">€997</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>50 payload generations/month</li>
+                        <li>12-hour turnaround</li>
+                        <li>Priority support</li>
+                        <li>Commercial license</li>
+                        <li>Batch requests</li>
+                        <li>All core features</li>
+                    </ul>
+                    <div class="pricing-target">Perfect for security consultancies</div>
+                </div>
+
+                <div class="pricing-card">
+                    <h3 class="pricing-name">Enterprise</h3>
+                    <div class="pricing-price">€2,997</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited generations</li>
+                        <li>4-hour turnaround</li>
+                        <li>Direct support channel</li>
+                        <li>Custom module development (4h/mo)</li>
+                        <li>NDA & SLA included</li>
+                        <li>All core features</li>
+                    </ul>
+                    <div class="pricing-target">Perfect for large operations</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta">
+            <h2>Get Started Today</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Professional payload generation service for authorized penetration testing</p>
+            
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">icopxzio@proton.me</div>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-label">Payment Methods</div>
+                    <div class="contact-value">SEPA • Bitcoin • Monero</div>
+                </div>
+                <div class="contact-method">
+                    <div class="contact-label">Response Time</div>
+                    <div class="contact-value">Within 24 hours</div>
+                </div>
+            </div>
+
+            <div class="legal">
+                <strong>⚠️ LEGAL COMPLIANCE REQUIRED</strong><br>
+                This service is for authorized security testing only. By engaging this service, you confirm possession of proper authorization for all testing activities, compliance with all applicable laws (CFAA, local regulations), and acceptance of full responsibility for usage. Business email required. No liability for misuse.
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>PolymorphX - Professional Security Service</p>
+            <p style="margin-top: 10px; font-size: 0.7rem;">Authorized Use Only • All Rights Reserved</p>
+        </footer>
+    </div>
+</body>
+</html>
